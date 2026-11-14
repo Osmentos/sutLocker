@@ -1,20 +1,25 @@
 package sutlocker.model;
 
-//Способы хранения пароля
+// Способы хранения пароля
 public enum EncryptionType {
-    PLAIN("Открытый вид"),
-    BASE64("Base64"),
-    MD5("MD5"),
-    FEISTEL("Шифр Фейстеля"),
-    MD5_SALT("MD5 + соль");
-    private final String name;
+    PLAIN("Открытый вид", true),
+    BASE64("Base64", true),
+    MD5("MD5", false),
+    FEISTEL("Шифр Фейстеля", true),
+    MD5_SALT("MD5 + соль", false);
 
-    EncryptionType(String name) {
+    private final String name;
+    private final boolean reversible;
+
+    EncryptionType(String name, boolean reversible) {
         this.name = name;
+        this.reversible = reversible;
     }
-    /**
-     * @return название на русском
-     */
+
+    public boolean isReversible() {
+        return reversible;
+    }
+
     @Override
     public String toString() {
         return name;
