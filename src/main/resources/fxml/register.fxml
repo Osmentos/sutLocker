@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sutlocker.ui.RegisterController"
+      alignment="CENTER" spacing="10" prefWidth="320">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    <Label text="Регистрация" style="-fx-font-size: 18px;"/>
+    <TextField fx:id="loginField" promptText="Логин"/>
+    <PasswordField fx:id="passwordField" promptText="Пароль"/>
+    <PasswordField fx:id="repeatField" promptText="Повторите пароль"/>
+    <Button text="Зарегистрироваться" maxWidth="Infinity" defaultButton="true" onAction="#onRegister"/>
+    <Button text="Назад ко входу" maxWidth="Infinity" onAction="#onBack"/>
+</VBox>

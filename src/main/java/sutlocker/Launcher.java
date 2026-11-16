@@ -1,7 +1,9 @@
 package sutlocker;
 
+//Для запуска из консоли
 public class Launcher {
+
     public static void main(String[] args) {
-        System.out.println("SutLocker started");
+        MainApp.main(args);
     }
 }
