@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="sutlocker.ui.MainController" prefWidth="760" prefHeight="440">
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <TextField fx:id="searchField" promptText="Поиск по сервису или логину" HBox.hgrow="ALWAYS"/>
+            <Button text="Выйти" onAction="#onLogout"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="table">
+            <columns>
+                <TableColumn fx:id="serviceColumn" text="Сервис" prefWidth="150"/>
+                <TableColumn fx:id="loginColumn" text="Логин" prefWidth="170"/>
+                <TableColumn fx:id="passwordColumn" text="Пароль / хэш" prefWidth="280"/>
+                <TableColumn fx:id="typeColumn" text="Способ хранения" prefWidth="140"/>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Button text="Добавить" onAction="#onAdd"/>
+            <Button text="Копировать пароль" onAction="#onCopy"/>
+            <Button text="Проверить пароль" onAction="#onCheck"/>
+            <Button text="Удалить" onAction="#onDelete"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -18,12 +18,12 @@ public class LoginController {
         try {
             SessionContext session = UiHelper.getAuthService()
                     .login(loginField.getText(), passwordField.getText());
-            UiHelper.showInfo("Вход выполнен: " + session.getUser().getLogin());
+            UiHelper.setSession(session);
+            UiHelper.showScene("main.fxml", "SutLocker: пароли");
         } catch (AppException e) {
             UiHelper.showError(e.getMessage());
         }
     }
-
     /** Нажатие на «Регистрация». */
     @FXML
     private void onRegister() {
