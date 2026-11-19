@@ -1,5 +1,7 @@
 package sutlocker.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sutlocker.crypto.CryptoStrategy;
 import sutlocker.crypto.CryptoStrategyFactory;
 import sutlocker.crypto.CryptoUtils;
@@ -11,8 +13,10 @@ import sutlocker.model.PasswordEntry;
 
 import java.util.List;
 
-/** Добавление, удаление, просмотр и поиск записей текущего пользователя. */
+/** Добавление, удаление, просмотр и поиск записей текущего пользователя */
 public class PasswordEntryService {
+
+    private static final Logger LOG = LogManager.getLogger(PasswordEntryService.class);
 
     private final PasswordEntryDao dao;
     private final SessionContext session;
@@ -23,26 +27,28 @@ public class PasswordEntryService {
         this.session = session;
     }
 
-    /** Кодирует пароль выбранным способом и сохраняет запись. */
+    /** Кодирует пароль выбранным способом и сохраняет запись */
     public void add(String service, String login, String password, EncryptionType type) {
         validate(service, login, password, type);
         String salt = type == EncryptionType.MD5_SALT ? CryptoUtils.generateSalt() : null;
         CryptoStrategy strategy = factory.create(type, salt, session.getKey());
         String encoded = strategy.encode(password);
         dao.insert(new PasswordEntry(0, userId(), service.trim(), login.trim(), encoded, type, salt));
+        LOG.info("Добавлена запись: сервис {}, способ {}", service.trim(), type);
     }
 
-    /** Удаляет запись текущего пользователя. */
+    /** Удаляет запись текущего пользователя */
     public void delete(int entryId) {
         dao.delete(entryId, userId());
+        LOG.info("Удалена запись {} пользователя {}", entryId, session.getUser().getLogin());
     }
 
-    /** Возвращает все записи пользователя для показа в таблице. */
+    /** Возвращает все записи пользователя для показа в таблице */
     public List<EntryView> list() {
         return search("");
     }
 
-    /** Ищет записи, у которых сервис или логин содержат текст запроса. */
+    /** Ищет записи, у которых сервис или логин содержат текст запроса */
     public List<EntryView> search(String query) {
         String text = query == null ? "" : query.trim().toLowerCase();
         return dao.findByUser(userId()).stream()
@@ -52,10 +58,12 @@ public class PasswordEntryService {
                 .toList();
     }
 
-    /** Проверяет, совпадает ли введённый пароль с сохранённым в записи. */
+    /** Проверяет, совпадает ли введённый пароль с сохранённым в записи */
     public boolean check(int entryId, String password) {
         PasswordEntry entry = findEntry(entryId);
-        return strategyFor(entry).matches(password, entry.getPassword());
+        boolean ok = strategyFor(entry).matches(password, entry.getPassword());
+        LOG.info("Проверка пароля записи {}: {}", entryId, ok ? "верно" : "неверно");
+        return ok;
     }
 
     private int userId() {
@@ -78,7 +86,7 @@ public class PasswordEntryService {
                 shownPassword(entry), entry.getType());
     }
 
-    /** Расшифрованный пароль для обратимых способов, хэш для необратимых. */
+    /** Расшифрованный пароль для обратимых способов, хэш для необратимых */
     private String shownPassword(PasswordEntry entry) {
         if (!entry.getType().isReversible()) {
             return entry.getPassword();
@@ -86,6 +94,7 @@ public class PasswordEntryService {
         try {
             return strategyFor(entry).decode(entry.getPassword());
         } catch (AppException e) {
+            LOG.warn("Не удалось расшифровать запись {}", entry.getId(), e);
             return "[ошибка расшифровки]";
         }
     }

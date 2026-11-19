@@ -43,7 +43,7 @@ test {
 jar {
     archiveFileName = 'sutlocker.jar'
     manifest {
-        attributes 'Main-Class': 'sutlocker.Launcher'
+        attributes 'Main-Class': 'sutlocker.Launcher', 'Multi-Release': 'true'
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'

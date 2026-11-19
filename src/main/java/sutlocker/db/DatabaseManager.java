@@ -1,54 +1,53 @@
 package sutlocker.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import sutlocker.AppPaths;
 import sutlocker.exception.AppException;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-// Подключение к файлу базы данных SQLite и создание таблицы
+/** Подключение к файлу базы данных SQLite и создание таблиц. */
 public class DatabaseManager {
+
+    private static final Logger LOG = LogManager.getLogger(DatabaseManager.class);
 
     private final Connection connection;
 
-    // Подключается к базе, которая лежит в файле по указанному пути
+    /** Подключается к базе, которая лежит в файле по указанному пути (":memory:" для тестов). */
     public DatabaseManager(String filePath) {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + filePath);
             createTables();
+            LOG.info("База данных: {}", filePath);
         } catch (SQLException e) {
+            LOG.error("Ошибка подключения к базе данных", e);
             throw new AppException("Не удалось подключиться к базе данных", e);
         }
     }
 
-    // Находит путь к архиву
+    /** Путь к файлу базы по умолчанию: рядом с jar-файлом (при запуске из IDE: в папке проекта). */
     public static String defaultFilePath() {
-        try {
-            Path location = Path.of(DatabaseManager.class
-                    .getProtectionDomain().getCodeSource().getLocation().toURI());
-            Path folder = Files.isDirectory(location) ? Path.of("").toAbsolutePath() : location.getParent();
-            return folder.resolve("sutlocker.db").toString();
-        } catch (Exception e) {
-            throw new AppException("Не удалось определить папку для базы данных", e);
-        }
+        return AppPaths.folder().resolve("sutlocker.db").toString();
     }
 
     public Connection getConnection() {
         return connection;
     }
 
-    // Закрывает соединение
+    /** Закрывает соединение. */
     public void close() {
         try {
             connection.close();
         } catch (SQLException e) {
+            LOG.error("Ошибка при закрытии базы данных", e);
             throw new AppException("Не удалось закрыть базу данных", e);
         }
     }
-    //users - данные для входа в приложение,  entries - информация о паролях сохраненных пользователем
+
     private void createTables() throws SQLException {
         try (Statement st = connection.createStatement()) {
             st.execute("CREATE TABLE IF NOT EXISTS users ("

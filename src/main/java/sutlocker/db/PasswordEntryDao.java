@@ -1,5 +1,7 @@
 package sutlocker.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sutlocker.exception.AppException;
 import sutlocker.model.EncryptionType;
 import sutlocker.model.PasswordEntry;
@@ -11,8 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// Работа с таблицей entries
+/** Работа с таблицей entries */
 public class PasswordEntryDao {
+
+    private static final Logger LOG = LogManager.getLogger(PasswordEntryDao.class);
 
     private final Connection connection;
 
@@ -20,7 +24,7 @@ public class PasswordEntryDao {
         this.connection = db.getConnection();
     }
 
-    // Сохраняет новую запись
+    /** Сохраняет новую запись */
     public void insert(PasswordEntry entry) {
         String sql = "INSERT INTO entries (user_id, service, login, password, type, salt) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -32,11 +36,12 @@ public class PasswordEntryDao {
             ps.setString(6, entry.getSalt());
             ps.executeUpdate();
         } catch (SQLException e) {
+            LOG.error("Не удалось сохранить запись сервиса {}", entry.getService(), e);
             throw new AppException("Не удалось сохранить запись", e);
         }
     }
 
-    // Возвращает все записи пользователя
+    /** Возвращает все записи пользователя */
     public List<PasswordEntry> findByUser(int userId) {
         String sql = "SELECT * FROM entries WHERE user_id = ? ORDER BY service";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -48,11 +53,12 @@ public class PasswordEntryDao {
             }
             return entries;
         } catch (SQLException e) {
+            LOG.error("Не удалось загрузить записи пользователя {}", userId, e);
             throw new AppException("Не удалось загрузить записи", e);
         }
     }
 
-    // Удаляет запись пользователя по номеру
+    /** Удаляет запись пользователя по номеру */
     public void delete(int id, int userId) {
         String sql = "DELETE FROM entries WHERE id = ? AND user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -60,6 +66,7 @@ public class PasswordEntryDao {
             ps.setInt(2, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
+            LOG.error("Не удалось удалить запись {}", id, e);
             throw new AppException("Не удалось удалить запись", e);
         }
     }

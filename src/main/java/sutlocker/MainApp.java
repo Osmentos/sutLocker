@@ -3,6 +3,8 @@ package sutlocker;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sutlocker.db.DatabaseManager;
 import sutlocker.db.PasswordEntryDao;
 import sutlocker.db.UserDao;
@@ -10,8 +12,10 @@ import sutlocker.exception.AppException;
 import sutlocker.service.AuthService;
 import sutlocker.ui.UiHelper;
 
-// Запуск приложения: подключение к базе и открытие окна входа
+/** Запуск приложения: подключение к базе и открытие окна входа. */
 public class MainApp extends Application {
+
+    private static final Logger LOG = LogManager.getLogger(MainApp.class);
 
     private DatabaseManager db;
 
@@ -21,7 +25,9 @@ public class MainApp extends Application {
             db = new DatabaseManager(DatabaseManager.defaultFilePath());
             UiHelper.init(stage, new AuthService(new UserDao(db)), new PasswordEntryDao(db));
             UiHelper.showScene("login.fxml", "SutLocker: вход");
+            LOG.info("Приложение запущено");
         } catch (AppException e) {
+            LOG.error("Не удалось запустить приложение", e);
             UiHelper.showError(e.getMessage());
             Platform.exit();
         }
@@ -32,6 +38,7 @@ public class MainApp extends Application {
         if (db != null) {
             db.close();
         }
+        LOG.info("Приложение закрыто");
     }
 
     public static void main(String[] args) {

@@ -1,5 +1,7 @@
 package sutlocker.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sutlocker.exception.AppException;
 import sutlocker.model.User;
 
@@ -9,8 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-// Работа с таблицей users
+/** Работа с таблицей users */
 public class UserDao {
+
+    private static final Logger LOG = LogManager.getLogger(UserDao.class);
 
     private final Connection connection;
 
@@ -18,7 +22,7 @@ public class UserDao {
         this.connection = db.getConnection();
     }
 
-    // Сохраняет нового пользователя
+    /** Сохраняет нового пользователя */
     public void insert(User user) {
         String sql = "INSERT INTO users (login, password_hash, salt) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -27,11 +31,12 @@ public class UserDao {
             ps.setString(3, user.getSalt());
             ps.executeUpdate();
         } catch (SQLException e) {
+            LOG.error("Не удалось сохранить пользователя {}", user.getLogin(), e);
             throw new AppException("Не удалось сохранить пользователя", e);
         }
     }
 
-    // Ищет пользователя по логину
+    /** Ищет пользователя по логину */
     public Optional<User> findByLogin(String login) {
         String sql = "SELECT * FROM users WHERE login = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -39,6 +44,7 @@ public class UserDao {
             ResultSet rs = ps.executeQuery();
             return rs.next() ? Optional.of(readUser(rs)) : Optional.empty();
         } catch (SQLException e) {
+            LOG.error("Не удалось найти пользователя {}", login, e);
             throw new AppException("Не удалось найти пользователя", e);
         }
     }
