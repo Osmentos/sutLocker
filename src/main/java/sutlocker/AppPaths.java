@@ -5,7 +5,7 @@ import sutlocker.exception.AppException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/** Папка приложения: рядом с jar-файлом (при запуске из IDE: папка проекта). */
+/** Папка приложения: рядом с jar-файлом (при запуске из IDE: папка проекта) */
 public class AppPaths {
 
     public static Path folder() {

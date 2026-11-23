@@ -12,7 +12,7 @@ import sutlocker.exception.AppException;
 import sutlocker.service.AuthService;
 import sutlocker.ui.UiHelper;
 
-/** Запуск приложения: подключение к базе и открытие окна входа. */
+/** Запуск приложения: подключение к базе и открытие окна входа */
 public class MainApp extends Application {
 
     private static final Logger LOG = LogManager.getLogger(MainApp.class);

@@ -1,6 +1,6 @@
 package sutlocker.model;
 
-// Способы хранения пароля
+/** Способы хранения пароля */
 public enum EncryptionType {
     PLAIN("Открытый вид", true),
     BASE64("Base64", true),

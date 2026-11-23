@@ -5,14 +5,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import sutlocker.exception.AppException;
 
-// Окно регистрации
+/** Окно регистрации */
 public class RegisterController {
 
     @FXML private TextField loginField;
     @FXML private PasswordField passwordField;
     @FXML private PasswordField repeatField;
 
-    // Нажатие на «Зарегистрироваться»
+    /** Нажатие на «Зарегистрироваться» */
     @FXML
     private void onRegister() {
         if (!passwordField.getText().equals(repeatField.getText())) {
@@ -28,7 +28,7 @@ public class RegisterController {
         }
     }
 
-    // Возврат к окну входа
+    /** Возврат к окну входа */
     @FXML
     private void onBack() {
         UiHelper.showScene("login.fxml", "SutLocker: вход");

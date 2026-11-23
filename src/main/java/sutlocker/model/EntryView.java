@@ -1,6 +1,6 @@
 package sutlocker.model;
 
-// Запись в читаемом виде
+/** Запись для таблицы на главном экране */
 public class EntryView {
 
     private int id;

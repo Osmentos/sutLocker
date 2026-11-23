@@ -1,6 +1,6 @@
 package sutlocker.model;
 
-//класс для записи информации в бд
+/** класс для записи информации в бд */
 public class PasswordEntry {
 
     private int id;

@@ -11,7 +11,7 @@ import sutlocker.service.PasswordEntryService;
 
 import java.util.Optional;
 
-// Главный экран: таблица записей, поиск, удаление, копирование, проверка
+/** Главный экран: таблица записей, поиск, удаление, копирование, проверка */
 public class MainController {
 
     @FXML private TableView<EntryView> table;
@@ -23,7 +23,7 @@ public class MainController {
 
     private PasswordEntryService service;
 
-    // Вызывается автоматически после загрузки fxml
+    /** Вызывается автоматически после загрузки fxml */
     @FXML
     private void initialize() {
         service = UiHelper.newEntryService();
@@ -35,14 +35,14 @@ public class MainController {
         refresh();
     }
 
-    // Нажатие на «Добавить»
+    /** Нажатие на «Добавить»*/
     @FXML
     private void onAdd() {
         UiHelper.showDialog("add-entry.fxml", "Новая запись");
         refresh();
     }
 
-    // Нажатие на «Удалить»
+    /** Нажатие на «Удалить» */
     @FXML
     private void onDelete() {
         EntryView entry = selectedOrNull();
@@ -57,7 +57,7 @@ public class MainController {
         }
     }
 
-    // Нажатие на «Копировать пароль»: для хэшей копируется сам хэш
+    /** Нажатие на «Копировать пароль»: для хэшей копируется сам хэш */
     @FXML
     private void onCopy() {
         EntryView entry = selectedOrNull();
@@ -66,7 +66,7 @@ public class MainController {
         }
     }
 
-    // Нажатие на «Проверить пароль»
+    /** Нажатие на «Проверить пароль» */
     @FXML
     private void onCheck() {
         EntryView entry = selectedOrNull();
@@ -84,13 +84,13 @@ public class MainController {
         }
     }
 
-    // Нажатие на «Выйти»
+    /** Нажатие на «Выйти» */
     @FXML
     private void onLogout() {
         UiHelper.logout();
     }
 
-    // Заполняет таблицу записями, подходящими под строку поиска
+    /** Заполняет таблицу записями, подходящими под строку поиска */
     private void refresh() {
         try {
             table.getItems().setAll(service.search(searchField.getText()));

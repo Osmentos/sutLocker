@@ -1,6 +1,6 @@
 package sutlocker;
 
-/** Точка входа: нужна, чтобы jar с JavaFX запускался из консоли. */
+/** Точка входа: нужна, чтобы jar с JavaFX запускался из консоли */
 public class Launcher {
 
     public static void main(String[] args) {

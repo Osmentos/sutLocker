@@ -1,5 +1,7 @@
 package sutlocker.exception;
 
+
+/** исключения */
 public class AppException extends RuntimeException{
     /**
      * @param message описание ошибки

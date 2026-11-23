@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import sutlocker.exception.AppException;
 import sutlocker.model.EncryptionType;
 
-// Форма добавления записи
+/** Форма добавления записи */
 public class AddEntryController {
 
     @FXML private TextField serviceField;

@@ -19,7 +19,7 @@ import sutlocker.service.SessionContext;
 import java.io.IOException;
 import java.util.Optional;
 
-//переключение экранов, сообщения, сеанс, буфер обмена
+/** переключение экранов, сообщения, сеанс, буфер обмена */
 public class UiHelper {
 
     private static Stage stage;
@@ -27,7 +27,7 @@ public class UiHelper {
     private static PasswordEntryDao entryDao;
     private static SessionContext session;
 
-    // Запоминает главное окно и сервисы, вызывается один раз при запуске
+    /** Запоминает главное окно и сервисы, вызывается один раз при запуске */
     public static void init(Stage primaryStage, AuthService auth, PasswordEntryDao dao) {
         stage = primaryStage;
         authService = auth;
@@ -46,12 +46,12 @@ public class UiHelper {
         session = newSession;
     }
 
-    // Создаёт сервис записей для текущего пользователя
+    /** Создаёт сервис записей для текущего пользователя */
     public static PasswordEntryService newEntryService() {
         return new PasswordEntryService(entryDao, session);
     }
 
-    // Выход: стирает ключ из памяти и возвращает окно входа
+    /** Выход: стирает ключ из памяти и возвращает окно входа */
     public static void logout() {
         if (session != null) {
             session.clear();
@@ -60,7 +60,7 @@ public class UiHelper {
         showScene("login.fxml", "SutLocker: вход");
     }
 
-    // Открывает экран из папки fxml в главном окне
+    /** Открывает экран из папки fxml в главном окне */
     public static void showScene(String fxmlName, String title) {
         stage.setScene(new Scene(loadFxml(fxmlName)));
         stage.setTitle(title);
@@ -68,7 +68,7 @@ public class UiHelper {
         stage.show();
     }
 
-    // Открывает маленькое окно поверх главного и ждёт, пока его закроют
+    /** Открывает маленькое окно поверх главного и ждёт, пока его закроют */
     public static void showDialog(String fxmlName, String title) {
         Stage dialog = new Stage();
         dialog.initOwner(stage);
@@ -78,24 +78,24 @@ public class UiHelper {
         dialog.showAndWait();
     }
 
-    // Показывает сообщение об ошибке
+    /** Показывает сообщение об ошибке */
     public static void showError(String message) {
         showAlert(Alert.AlertType.ERROR, message);
     }
 
-    // Показывает обычное сообщение
+    /** Показывает обычное сообщение */
     public static void showInfo(String message) {
         showAlert(Alert.AlertType.INFORMATION, message);
     }
 
-    // Спрашивает подтверждение, возвращает true, если нажали ок
+    /** Спрашивает подтверждение, возвращает true, если нажали ок */
     public static boolean confirm(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message);
         alert.setHeaderText(null);
         return alert.showAndWait().filter(button -> button == ButtonType.OK).isPresent();
     }
 
-    // Просит ввести строку
+    /** Просит ввести строку */
     public static Optional<String> askText(String message) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setHeaderText(null);
@@ -103,7 +103,7 @@ public class UiHelper {
         return dialog.showAndWait();
     }
 
-    // Копирует текст в буфер обмена
+    /** Копирует текст в буфер обмена */
     public static void copyToClipboard(String text) {
         ClipboardContent content = new ClipboardContent();
         content.putString(text);

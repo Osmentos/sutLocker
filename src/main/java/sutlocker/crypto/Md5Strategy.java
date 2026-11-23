@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HexFormat;
 
-// MD5
+/** MD5 */
 public class Md5Strategy implements CryptoStrategy {
 
     @Override

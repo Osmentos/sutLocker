@@ -6,13 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 
-// Шифр Фейстеля
+/** Шифр Фейстеля */
 public class FeistelStrategy implements CryptoStrategy {
 
     private static final int ROUNDS = 4;
     private final byte[] key;
 
-    // Создаёт шифр по ключу (любой непустой массив байт)
+    /** Создаёт шифр по ключу (любой непустой массив байт) */
     public FeistelStrategy(byte[] key) {
         if (key == null || key.length == 0) {
             throw new AppException("Ключ шифра не задан");
@@ -46,12 +46,12 @@ public class FeistelStrategy implements CryptoStrategy {
         return true;
     }
 
-    // Раундовая функция F
+    /** Раундовая функция F */
     private int roundFunction(int half, int roundKey) {
         return ((half ^ roundKey) * 31 + 7) & 0xFF;
     }
 
-    // Проходит по всем блокам по 2 байта и шифрует или расшифровывает их.
+    /** Проходит по всем блокам по 2 байта и шифрует или расшифровывает их */
     private void process(byte[] data, boolean decrypt) {
         for (int i = 0; i < data.length; i += 2) {
             int left = data[i] & 0xFF;
@@ -67,7 +67,7 @@ public class FeistelStrategy implements CryptoStrategy {
         }
     }
 
-    // Декодирует Base64 и проверяет, что длина чётная
+    /** Декодирует Base64 и проверяет, что длина чётная */
     private byte[] readBase64(String encoded) {
         try {
             byte[] data = Base64.getDecoder().decode(encoded);
