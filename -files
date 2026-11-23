@@ -1,0 +1,13 @@
+[33m7c089a5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m gradle tests
+[33m3548ae2[m javadoc
+[33me3e7116[m comments for javadoc and log4j realization
+[33m1f6c032[m main screen
+[33m039331f[m registartion + login
+[33mbbf024e[m find password and compare hash or return password
+[33m33be728[m login + session
+[33mdc286b3[m Database interaction
+[33mcdc2c6b[m CryptoUtils and some fixes
+[33me5105df[m feistel + factory
+[33mc30ef53[m main classes
+[33mb93ce11[m Remove .idea from repository
+[33m2bda7c3[m gradle test
