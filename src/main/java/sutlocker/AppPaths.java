@@ -8,6 +8,13 @@ import java.nio.file.Path;
 /** Папка приложения: рядом с jar-файлом (при запуске из IDE: папка проекта) */
 public class AppPaths {
 
+
+    /**
+     * Возвращает папку приложения: рядом с jar-файлом, а при запуске из IDE папку проекта
+     *
+     * @return путь к папке приложения
+     * @throws AppException если папку не удалось определить
+     */
     public static Path folder() {
         try {
             Path location = Path.of(AppPaths.class

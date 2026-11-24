@@ -20,11 +20,21 @@ public class PasswordEntryDao {
 
     private final Connection connection;
 
+    /**
+     * Создаёт DAO для работы с записями.
+     *
+     * @param db менеджер базы данных
+     */
     public PasswordEntryDao(DatabaseManager db) {
         this.connection = db.getConnection();
     }
 
-    /** Сохраняет новую запись */
+    /**
+     * Сохраняет новую запись.
+     *
+     * @param entry запись с закодированным паролем
+     * @throws AppException если сохранить не удалось
+     */
     public void insert(PasswordEntry entry) {
         String sql = "INSERT INTO entries (user_id, service, login, password, type, salt) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -41,7 +51,13 @@ public class PasswordEntryDao {
         }
     }
 
-    /** Возвращает все записи пользователя */
+    /**
+     * Возвращает все записи пользователя, отсортированные по названию сервиса.
+     *
+     * @param userId номер пользователя
+     * @return список записей (пустой, если записей нет)
+     * @throws AppException при ошибке чтения из базы
+     */
     public List<PasswordEntry> findByUser(int userId) {
         String sql = "SELECT * FROM entries WHERE user_id = ? ORDER BY service";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -58,7 +74,13 @@ public class PasswordEntryDao {
         }
     }
 
-    /** Удаляет запись пользователя по номеру */
+    /**
+     * Удаляет запись пользователя по номеру. Чужие записи удалить нельзя.
+     *
+     * @param id     номер записи
+     * @param userId номер владельца записи
+     * @throws AppException при ошибке удаления
+     */
     public void delete(int id, int userId) {
         String sql = "DELETE FROM entries WHERE id = ? AND user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -71,6 +93,13 @@ public class PasswordEntryDao {
         }
     }
 
+    /**
+     * Превращает текущую строку результата запроса в запись.
+     *
+     * @param rs результат запроса, установленный на нужную строку
+     * @return запись
+     * @throws SQLException при ошибке чтения полей
+     */
     private PasswordEntry readEntry(ResultSet rs) throws SQLException {
         return new PasswordEntry(rs.getInt("id"), rs.getInt("user_id"), rs.getString("service"),
                 rs.getString("login"), rs.getString("password"),

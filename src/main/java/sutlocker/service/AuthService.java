@@ -14,11 +14,22 @@ public class AuthService {
 
     private final UserDao userDao;
 
+    /**
+     * Создаёт сервис.
+     *
+     * @param userDao доступ к таблице пользователей
+     */
     public AuthService(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    /** Регистрирует нового пользователя. */
+    /**
+     * Регистрирует нового пользователя: создаёт соль и сохраняет хэш пароля.
+     *
+     * @param login    логин (минимум 3 символа)
+     * @param password пароль (минимум 6 символов)
+     * @throws AppException если данные некорректны или логин уже занят
+     */
     public void register(String login, String password) {
         validate(login, password);
         String cleanLogin = login.trim();
@@ -32,7 +43,14 @@ public class AuthService {
         LOG.info("Зарегистрирован пользователь {}", cleanLogin);
     }
 
-    /** Проверяет логин и пароль, возвращает данные сеанса. */
+    /**
+     * Проверяет логин и пароль и создаёт сеанс с ключом шифрования.
+     *
+     * @param login    логин
+     * @param password пароль
+     * @return данные сеанса
+     * @throws AppException если логин или пароль неверны
+     */
     public SessionContext login(String login, String password) {
         if (login == null || password == null) {
             throw loginFailed(login);
@@ -47,13 +65,24 @@ public class AuthService {
         return new SessionContext(user, CryptoUtils.deriveKey(password, user.getSalt()));
     }
 
-    /** Записывает неудачный вход в лог и создаёт ошибку для пользователя. */
+    /**
+     * Записывает неудачный вход в лог и создаёт ошибку для пользователя.
+     *
+     * @param login введённый логин
+     * @return исключение с общим сообщением (не говорит, что именно неверно)
+     */
     private AppException loginFailed(String login) {
         LOG.warn("Неудачная попытка входа: логин {}", login);
         return new AppException("Неверный логин или пароль");
     }
 
-    /** Проверяет логин и пароль при регистрации. */
+    /**
+     * Проверяет логин и пароль при регистрации.
+     *
+     * @param login    логин
+     * @param password пароль
+     * @throws AppException если логин или пароль слишком короткие
+     */
     private void validate(String login, String password) {
         if (login == null || login.trim().length() < 3) {
             throw new AppException("Логин должен содержать минимум 3 символа");

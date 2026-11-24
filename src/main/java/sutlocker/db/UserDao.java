@@ -18,11 +18,21 @@ public class UserDao {
 
     private final Connection connection;
 
+    /**
+     * Создаёт DAO для работы с пользователями
+     *
+     * @param db менеджер базы данных
+     */
     public UserDao(DatabaseManager db) {
         this.connection = db.getConnection();
     }
 
-    /** Сохраняет нового пользователя */
+    /**
+     * Сохраняет нового пользователя
+     *
+     * @param user пользователь с логином, хэшем пароля и солью
+     * @throws AppException если сохранить не удалось (например, логин уже занят)
+     */
     public void insert(User user) {
         String sql = "INSERT INTO users (login, password_hash, salt) VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -36,7 +46,13 @@ public class UserDao {
         }
     }
 
-    /** Ищет пользователя по логину */
+    /**
+     * Ищет пользователя по логину.
+     *
+     * @param login логин
+     * @return пользователь или пустое значение, если такого нет
+     * @throws AppException при ошибке чтения из базы
+     */
     public Optional<User> findByLogin(String login) {
         String sql = "SELECT * FROM users WHERE login = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -49,6 +65,13 @@ public class UserDao {
         }
     }
 
+    /**
+     * Превращает текущую строку результата запроса в объект пользователя.
+     *
+     * @param rs результат запроса, установленный на нужную строку
+     * @return пользователь
+     * @throws SQLException при ошибке чтения полей
+     */
     private User readUser(ResultSet rs) throws SQLException {
         return new User(rs.getInt("id"), rs.getString("login"),
                 rs.getString("password_hash"), rs.getString("salt"));

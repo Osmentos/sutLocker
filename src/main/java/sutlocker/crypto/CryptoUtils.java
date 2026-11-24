@@ -9,28 +9,52 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.HexFormat;
 
-/** Вспомогательные методы: соль, хэш мастер-пароля, ключ шифрования. */
+/** Вспомогательные методы: соль, хэш мастер-пароля, ключ шифрования */
 public class CryptoUtils {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    /** Случайная соль в виде строки. */
+    /**
+     * Создаёт случайную соль
+     *
+     * @return соль в виде строки Base64
+     */
     public static String generateSalt() {
         byte[] bytes = new byte[16];
         RANDOM.nextBytes(bytes);
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    /** Хэш мастер-пароля: SHA-256 от «соль + пароль». */
+    /**
+     * Считает хэш мастер-пароля: SHA-256 от строки «соль + пароль»
+     *
+     * @param password мастер-пароль
+     * @param salt     соль пользователя
+     * @return хэш в виде шестнадцатеричной строки
+     */
     public static String hashPassword(String password, String salt) {
         return HexFormat.of().formatHex(sha256(salt + password));
     }
 
-    /** Ключ для шифра Фейстеля, получается из мастер-пароля и соли. */
+    /**
+     * Получает ключ для шифра Фейстеля из мастер-пароля и соли
+     * Слово «key» в начале строки делает ключ отличным от хэша, который хранится в базе
+     *
+     * @param password мастер-пароль
+     * @param salt     соль пользователя
+     * @return ключ длиной 16 байт
+     */
     public static byte[] deriveKey(String password, String salt) {
         return Arrays.copyOf(sha256("key" + salt + password), 16);
     }
 
+    /**
+     * Считает SHA-256 от строки.
+     *
+     * @param text исходная строка
+     * @return 32 байта хэша
+     * @throws AppException если алгоритм SHA-256 недоступен
+     */
     private static byte[] sha256(String text) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

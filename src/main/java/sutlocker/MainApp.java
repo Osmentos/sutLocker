@@ -19,6 +19,11 @@ public class MainApp extends Application {
 
     private DatabaseManager db;
 
+    /**
+     * Подключается к базе данных и открывает окно входа
+     *
+     * @param stage главное окно приложения
+     */
     @Override
     public void start(Stage stage) {
         try {
@@ -33,6 +38,7 @@ public class MainApp extends Application {
         }
     }
 
+    /** Закрывает соединение с базой данных при выходе из приложения */
     @Override
     public void stop() {
         if (db != null) {
@@ -41,6 +47,7 @@ public class MainApp extends Application {
         LOG.info("Приложение закрыто");
     }
 
+    /** запускает JavaFX-приложение */
     public static void main(String[] args) {
         launch(args);
     }

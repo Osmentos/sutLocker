@@ -12,7 +12,7 @@ public class LoginController {
     @FXML private TextField loginField;
     @FXML private PasswordField passwordField;
 
-    /** Нажатие на «Войти». */
+    /** Нажатие на «Войти»: проверяет логин и пароль и открывает главный экран. */
     @FXML
     private void onLogin() {
         try {
@@ -24,7 +24,8 @@ public class LoginController {
             UiHelper.showError(e.getMessage());
         }
     }
-    /** Нажатие на «Регистрация». */
+
+    /** Нажатие на «Регистрация»: открывает окно регистрации. */
     @FXML
     private void onRegister() {
         UiHelper.showScene("register.fxml", "SutLocker: регистрация");
